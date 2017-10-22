@@ -37,23 +37,33 @@
             background: transparent;
         }
 
-        .form-control.ng-pristine {
-            transition: all linear 0.5s;
-            background: transparent;
+        .faGood {
+            display: inline-block;
+            font: normal normal normal 14px/1 FontAwesome;
+            font-size: inherit;
+            text-rendering: auto;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            color: #17a2b8 !important
+
         }
 
-        .form-control.ng-untouched {
-            transition: all linear 0.5s;
-            background: transparent;
+        .faBad {
+            display: inline-block;
+            font: normal normal normal 14px/1 FontAwesome;
+            font-size: inherit;
+            text-rendering: auto;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            color: red !important;
+
         }
 
-        .form-control.ng-invalid {
-            .has-error;
+        .btn-primary {
+            background-color: #17a2b8 !important;
+            border: none !important
         }
 
-        .form-control.ng-valid {
-            .has-success;
-        }
 
     </style>
 </head>
@@ -68,28 +78,53 @@
     <div class="row">
         <div class="col">
             <form name="myForm">
-                <div class="form-group has-success">
-                    <label for="name" class="col-form-label">Nom de la tache</label>
-                    <input class="form-control" type="text" ng-model="form.todoName" ng-value="form.todoName" id="name"
-                           placeholder="Renseignez un nom pour cette todolist" required>
+                <div class="form-group">
+                    <label class="sr-only" for="name">Nom de la todo</label>
+                    <div class="input-group">
+                        <input class="form-control" type="text" ng-model="form.todoName" ng-value="form.todoName"
+                               id="name"
+                               placeholder="Renseignez un nom pour cette todolist" required>
+                        <span ng-if="form.todoName.length > 5 " class="input-group-addon"><i class="faGood fa-check"
+                                                                                             aria-hidden="true"></i></span>
+                        <span ng-if="formIsSubmitted && form.todoName.length <= 5" class="input-group-addon"><i
+                                class="faBad fa-check"
+                                aria-hidden="true"></i></span>
+
+                    </div>
                 </div>
-                <div class="form-group has-error">
+                <div class="form-group">
                     <label for="description" class="col-form-label">Description de la tache</label>
-                    <textarea class="form-control" type="text" ng-model="form.todoDescription"
-                              ng-value="form.todoDescription" id="description"
-                              placeholder="Renseignez une description pour cette todolist" required></textarea>
+                    <div class="input-group">
+                        <textarea class="form-control" type="text" ng-model="form.todoDescription"
+                                  ng-value="form.todoDescription" id="description"
+                                  placeholder="Renseignez une description pour cette todolist" required></textarea>
+                        <span ng-if="form.todoDescription.length >= 10 " class="input-group-addon"><i
+                                class="faGood fa-check"
+                                aria-hidden="true"></i></span>
+                        <span ng-if="formIsSubmitted && form.todoDescription.length < 10 " class="input-group-addon"><i
+                                class="faBad fa-check"
+                                aria-hidden="true"></i></span>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="date" class="col-form-label">Date de plannification de la tache</label>
-                    <input class="form-control" type="datetime-local" ng-model="form.todoDate" id="date"
-                           placeholder="Renseignez l'heure de plannification de la tache" required>
+                    <div class="input-group">
+                        <input class="form-control" type="datetime-local" ng-model="form.todoDate" id="date"
+                               placeholder="Renseignez l'heure de plannification de la tache" required>
+                        <span ng-if="form.todoDate > 0 " class="input-group-addon"><i class="faGood fa-check"
+                                                                                      aria-hidden="true"></i></span>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="address" class="col-form-label">Lieu pour effectuer la tache</label>
-                    <input class="form-control" type="text" ng-model="form.todoAddress" ng-value="form.todoAddress"
-                           id="address"
-                           aria-describedby="adresseHelp"
-                           placeholder="Renseignez votre adresse postale" required>
+                    <div class="input-group">
+                        <input class="form-control" type="text" ng-model="form.todoAddress" ng-value="form.todoAddress"
+                               id="address"
+                               aria-describedby="adresseHelp"
+                               placeholder="Renseignez votre adresse postale" required>
+                        <span ng-if="form.todoAddress.length > 0 " class="input-group-addon"><i class="faGood fa-check"
+                                                                                                aria-hidden="true"></i></span>
+                    </div>
                     <small ng-if="error !== false" id="adresseHelp" class="form-text text-danger">Merci de rentrer vos
                         coordonnées afin de vous localiser
                     </small>
@@ -162,7 +197,7 @@
         integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"
         crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.6/angular.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-animate.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.6/angular-animate.js"></script>
 <script src="/assets/js/app.js"></script>
 
 <script src="https://use.fontawesome.com/1e7f89e1fd.js"></script>
