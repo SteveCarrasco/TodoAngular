@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="fr" ng-app="MonApplicationGoogleMap" ng-controller="MonControllerPrincipal">
+<head>
+    <meta charset="UTF-8">
+    <title>{{title}}</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"/>
+    <style>
+        #map {
+            height: 400px;
+            width: 100%;
+        }
+
+        body {
+            background-color: white;
+        }
+
+        .animate-enter {
+            -webkit-transition: 1s linear all; /* Chrome */
+            transition: 1s linear all;
+            opacity: 0;
+        }
+
+        .animate-enter.animate-enter-active {
+            opacity: 1;
+        }
+
+        .col-form-label {
+            padding-top: calc(.5rem - 1px * 2);
+            padding-bottom: calc(.5rem - 1px * 2);
+            margin-bottom: 0;
+            font-family: Roboto;
+            font-size: 0.8em;
+        }
+
+        .form-control {
+            transition: all linear 0.5s;
+            background: transparent;
+        }
+
+        .form-control.ng-pristine {
+            transition: all linear 0.5s;
+            background: transparent;
+        }
+
+        .form-control.ng-untouched {
+            transition: all linear 0.5s;
+            background: transparent;
+        }
+
+        .form-control.ng-invalid {
+            .has-error;
+        }
+
+        .form-control.ng-valid {
+            .has-success;
+        }
+
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="col">
+        <h1 class="text-center">{{title}}</h1>
+    </div>
+</div>
+<hr>
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <form name="myForm">
+                <div class="form-group has-success">
+                    <label for="name" class="col-form-label">Nom de la tache</label>
+                    <input class="form-control" type="text" ng-model="form.todoName" ng-value="form.todoName" id="name"
+                           placeholder="Renseignez un nom pour cette todolist" required>
+                </div>
+                <div class="form-group has-error">
+                    <label for="description" class="col-form-label">Description de la tache</label>
+                    <textarea class="form-control" type="text" ng-model="form.todoDescription"
+                              ng-value="form.todoDescription" id="description"
+                              placeholder="Renseignez une description pour cette todolist" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="date" class="col-form-label">Date de plannification de la tache</label>
+                    <input class="form-control" type="datetime-local" ng-model="form.todoDate" id="date"
+                           placeholder="Renseignez l'heure de plannification de la tache" required>
+                </div>
+                <div class="form-group">
+                    <label for="address" class="col-form-label">Lieu pour effectuer la tache</label>
+                    <input class="form-control" type="text" ng-model="form.todoAddress" ng-value="form.todoAddress"
+                           id="address"
+                           aria-describedby="adresseHelp"
+                           placeholder="Renseignez votre adresse postale" required>
+                    <small ng-if="error !== false" id="adresseHelp" class="form-text text-danger">Merci de rentrer vos
+                        coordonnées afin de vous localiser
+                    </small>
+                </div>
+                <div ng-if="ButtonEditPushed === false" class="form-group">
+                    <button type="submit" class="btn btn-primary" ng-click="addElementTodolist()">Ajouter
+                    </button>
+                </div>
+                <div ng-if="ButtonEditPushed !== false" class="form-group">
+                    <button type="submit" class="btn btn-warning" ng-click="updateTodo()">Modifier
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <table class="table">
+                <thead ng-if="todolist.length > 0" class="thead-inverse">
+                <tr>
+                    <th>ID</th>
+                    <th>Nom</th>
+                    <th>Description</th>
+                    <th>Date</th>
+                    <th>Adresse</th>
+                    <th>Modifier</th>
+                    <th>Supprimer</th>
+                    <th>Localiser</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="todo in todolist">
+                    <td>{{ $index + 1 }}</td>
+                    <td>{{ todo.name }}</td>
+                    <td>{{ todo.description }}</td>
+                    <td>
+                        <small>{{todo.date | date: "'Le' d MMMM yyyy" : '+0100' }}</small>
+                    </td>
+                    <td>
+                        <small>{{ todo.address }}</small>
+                    </td>
+                    <td><i ng-click="editTodo($index)" class="fa fa-pencil-square-o" aria-hidden="true"></i></td>
+                    <td><i ng-click="deleteTodo($index)" class="fa fa-trash" aria-hidden="true"></i></td>
+                    <td><i ng-click="displayGoogleMap($index)" class="fa fa-map" aria-hidden="true"></i></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <hr>
+    <div class="row">
+        <div ng-if="todolist.length > 0" id="map"></div>
+    </div>
+</div>
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB30T8wpl40H8953Bu-s4sulb5GseJ_dJs">
+</script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"
+        integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"
+        integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.6/angular.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-animate.js"></script>
+<script src="/assets/js/app.js"></script>
+
+<script src="https://use.fontawesome.com/1e7f89e1fd.js"></script>
+
+</body>
+</html>
