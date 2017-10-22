@@ -8,7 +8,7 @@ app.controller('MonControllerPrincipal', function ($scope) {
     $scope.error = false;
     $scope.ButtonEditPushed = false;
     $scope.errorForm = false;
-    $scope.formIsSubmitted = false;
+
 
 
     var geocoder;
@@ -27,7 +27,7 @@ app.controller('MonControllerPrincipal', function ($scope) {
 
     // Add an Element in todolist
     $scope.addElementTodolist = function () {
-        $scope.formIsSubmitted = true;
+
         if ($scope.myForm.$invalid) {
 
             return;
